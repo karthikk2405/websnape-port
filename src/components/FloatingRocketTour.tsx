@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-// A fixed-position clay rocket SVG that flies around the page
 export const FloatingRocketTour: React.FC = () => {
   const [flying, setFlying] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -9,16 +8,13 @@ export const FloatingRocketTour: React.FC = () => {
   useEffect(() => {
     const startTour = () => {
       setFlying(true);
-      // Stop after one full loop (10s)
       timerRef.current = setTimeout(() => {
         setFlying(false);
       }, 10000);
     };
 
-    // First tour after 4 seconds of page load
     timerRef.current = setTimeout(() => {
       startTour();
-      // Repeat every 30 seconds
       intervalRef.current = setInterval(startTour, 30000);
     }, 4000);
 
@@ -33,47 +29,58 @@ export const FloatingRocketTour: React.FC = () => {
       className={`rocket-tour ${flying ? 'flying' : ''}`}
       aria-hidden="true"
     >
-      {/* Clay-style rocket SVG */}
-      <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Drop shadow */}
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#C87A4B" floodOpacity="0.5"/>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
+          
+          <linearGradient id="bodyGrad" x1="20" y1="20" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="50%" stopColor="#E2E8F0" />
+            <stop offset="100%" stopColor="#94A3B8" />
+          </linearGradient>
+
+          <linearGradient id="noseGrad" x1="32" y1="8" x2="32" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#60A5FA" />
+            <stop offset="100%" stopColor="#2563EB" />
+          </linearGradient>
+
+          <linearGradient id="finGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#A78BFA" />
+            <stop offset="100%" stopColor="#6D28D9" />
+          </linearGradient>
+
+          <linearGradient id="flameGrad" x1="32" y1="48" x2="32" y2="60" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#67E8F9" />
+            <stop offset="50%" stopColor="#3B82F6" />
+            <stop offset="100%" stopColor="#A855F7" opacity="0" />
+          </linearGradient>
         </defs>
 
-        {/* Exhaust flame */}
-        <ellipse cx="26" cy="44" rx="7" ry="9" fill="#FFCC44" opacity="0.85"/>
-        <ellipse cx="26" cy="43" rx="4" ry="6" fill="#FF9933" opacity="0.9"/>
-        <ellipse cx="26" cy="42" rx="2" ry="4" fill="#FFFBE0" opacity="0.95"/>
+        {/* Exhaust Flame */}
+        <path d="M26 48 Q32 64 38 48 Q32 54 26 48Z" fill="url(#flameGrad)" filter="url(#glow)"/>
+        <circle cx="32" cy="49" r="3" fill="#FFFFFF" filter="url(#glow)"/>
 
-        {/* Body */}
-        <rect x="17" y="18" width="18" height="22" rx="9" fill="#F2DDD0" filter="url(#shadow)"/>
-        {/* Body outline */}
-        <rect x="17" y="18" width="18" height="22" rx="9" fill="none" stroke="#2A1A10" strokeWidth="1.5" opacity="0.25"/>
+        {/* Left Fin */}
+        <path d="M22 36 L12 46 L22 42 Z" fill="url(#finGrad)"/>
+        {/* Right Fin */}
+        <path d="M42 36 L52 46 L42 42 Z" fill="url(#finGrad)"/>
 
-        {/* Copper stripe */}
-        <rect x="17" y="24" width="18" height="5" rx="0" fill="#E4A882" opacity="0.8"/>
+        {/* Main Body */}
+        <path d="M22 24 C22 18, 28 10, 32 6 C36 10, 42 18, 42 24 L42 44 C42 46, 40 48, 38 48 L26 48 C24 48, 22 46, 22 44 Z" fill="url(#bodyGrad)"/>
 
-        {/* Nose cone */}
-        <path d="M17 22 Q26 4 35 22Z" fill="#C87A4B" filter="url(#shadow)"/>
-        <path d="M17 22 Q26 4 35 22Z" fill="none" stroke="#2A1A10" strokeWidth="1.5" opacity="0.2"/>
-
-        {/* Nose tip */}
-        <circle cx="26" cy="8" r="4" fill="#D46A43"/>
+        {/* Nose Cone Overlay */}
+        <path d="M22 24 C22 18, 28 10, 32 6 C36 10, 42 18, 42 24 Q32 28 22 24Z" fill="url(#noseGrad)"/>
 
         {/* Window */}
-        <circle cx="26" cy="32" r="5" fill="#F2DDD0"/>
-        <circle cx="26" cy="32" r="3.5" fill="#5A9B88"/>
-        <circle cx="24.5" cy="30.5" r="1" fill="white" opacity="0.7"/>
+        <circle cx="32" cy="32" r="5" fill="#1E293B"/>
+        <circle cx="32" cy="32" r="4" fill="#38BDF8"/>
+        <path d="M30 30 A3 3 0 0 1 34 30" stroke="#FFFFFF" strokeWidth="1" strokeLinecap="round" fill="none"/>
 
-        {/* Left fin */}
-        <path d="M17 36 L10 42 L17 40Z" fill="#D46A43" filter="url(#shadow)"/>
-        <path d="M17 36 L10 42 L17 40Z" fill="none" stroke="#2A1A10" strokeWidth="1" opacity="0.2"/>
-
-        {/* Right fin */}
-        <path d="M35 36 L42 42 L35 40Z" fill="#D46A43" filter="url(#shadow)"/>
-        <path d="M35 36 L42 42 L35 40Z" fill="none" stroke="#2A1A10" strokeWidth="1" opacity="0.2"/>
+        {/* Highlights */}
+        <path d="M24 24 L24 42" stroke="#FFFFFF" strokeWidth="1" opacity="0.6" fill="none"/>
       </svg>
     </div>
   );

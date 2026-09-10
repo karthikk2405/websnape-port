@@ -43,12 +43,12 @@ export const Navbar: React.FC = () => {
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-[#55544E]">
+        <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-[#55544E]">
           {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="hover:text-[#121212] transition-colors py-1 relative group"
+              className="hover:text-[#121212] transition-colors py-1 relative group whitespace-nowrap"
             >
               {item.label}
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#C87A4B] transition-all duration-300 group-hover:w-full" />
@@ -57,7 +57,7 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Right CTA Button */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4">
           <a
             href="#lab"
             onClick={() => setActiveDemoView('customer')}
