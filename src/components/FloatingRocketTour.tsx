@@ -31,56 +31,45 @@ export const FloatingRocketTour: React.FC = () => {
     >
       <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#1A1A1A" floodOpacity="0.3"/>
           </filter>
-          
-          <linearGradient id="bodyGrad" x1="20" y1="20" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="50%" stopColor="#E2E8F0" />
-            <stop offset="100%" stopColor="#94A3B8" />
-          </linearGradient>
-
-          <linearGradient id="noseGrad" x1="32" y1="8" x2="32" y2="24" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#60A5FA" />
-            <stop offset="100%" stopColor="#2563EB" />
-          </linearGradient>
-
-          <linearGradient id="finGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#A78BFA" />
-            <stop offset="100%" stopColor="#6D28D9" />
-          </linearGradient>
-
-          <linearGradient id="flameGrad" x1="32" y1="48" x2="32" y2="60" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#67E8F9" />
-            <stop offset="50%" stopColor="#3B82F6" />
-            <stop offset="100%" stopColor="#A855F7" opacity="0" />
-          </linearGradient>
         </defs>
 
-        {/* Exhaust Flame */}
-        <path d="M26 48 Q32 64 38 48 Q32 54 26 48Z" fill="url(#flameGrad)" filter="url(#glow)"/>
-        <circle cx="32" cy="49" r="3" fill="#FFFFFF" filter="url(#glow)"/>
+        <g filter="url(#shadow)">
+          {/* Exhaust Flame (3 layers, outlined) */}
+          <path d="M26 48 Q32 66 38 48 Z" fill="#FFCC00" stroke="#1A1A1A" strokeWidth="2"/>
+          <path d="M28 48 Q32 60 36 48 Z" fill="#FF8811" stroke="#1A1A1A" strokeWidth="2"/>
+          <path d="M30 48 Q32 54 34 48 Z" fill="#FF3333" stroke="#1A1A1A" strokeWidth="1.5"/>
 
-        {/* Left Fin */}
-        <path d="M22 36 L12 46 L22 42 Z" fill="url(#finGrad)"/>
-        {/* Right Fin */}
-        <path d="M42 36 L52 46 L42 42 Z" fill="url(#finGrad)"/>
+          {/* Left Fin */}
+          <path d="M22 36 Q10 42 12 50 Q16 44 24 44 Z" fill="#2288DD" stroke="#1A1A1A" strokeWidth="2.5" strokeLinejoin="round"/>
+          
+          {/* Right Fin */}
+          <path d="M42 36 Q54 42 52 50 Q48 44 40 44 Z" fill="#2288DD" stroke="#1A1A1A" strokeWidth="2.5" strokeLinejoin="round"/>
 
-        {/* Main Body */}
-        <path d="M22 24 C22 18, 28 10, 32 6 C36 10, 42 18, 42 24 L42 44 C42 46, 40 48, 38 48 L26 48 C24 48, 22 46, 22 44 Z" fill="url(#bodyGrad)"/>
+          {/* Nozzle */}
+          <path d="M26 44 L38 44 L36 48 L28 48 Z" fill="#555555" stroke="#1A1A1A" strokeWidth="2.5" strokeLinejoin="round"/>
 
-        {/* Nose Cone Overlay */}
-        <path d="M22 24 C22 18, 28 10, 32 6 C36 10, 42 18, 42 24 Q32 28 22 24Z" fill="url(#noseGrad)"/>
+          {/* Main Body (Chubby) */}
+          <path d="M32 6 C42 12, 46 26, 42 44 L22 44 C18 26, 22 12, 32 6 Z" fill="#FFFFFF" stroke="#1A1A1A" strokeWidth="2.5" strokeLinejoin="round"/>
 
-        {/* Window */}
-        <circle cx="32" cy="32" r="5" fill="#1E293B"/>
-        <circle cx="32" cy="32" r="4" fill="#38BDF8"/>
-        <path d="M30 30 A3 3 0 0 1 34 30" stroke="#FFFFFF" strokeWidth="1" strokeLinecap="round" fill="none"/>
+          {/* Red Nose Cone */}
+          <path d="M32 6 C37 9, 39.5 15, 40 20 L24 20 C24.5 15, 27 9, 32 6 Z" fill="#FF1111" stroke="#1A1A1A" strokeWidth="2.5" strokeLinejoin="round"/>
 
-        {/* Highlights */}
-        <path d="M24 24 L24 42" stroke="#FFFFFF" strokeWidth="1" opacity="0.6" fill="none"/>
+          {/* Rivets */}
+          <circle cx="27" cy="23" r="1" fill="#1A1A1A"/>
+          <circle cx="30" cy="23.5" r="1" fill="#1A1A1A"/>
+          <circle cx="34" cy="23.5" r="1" fill="#1A1A1A"/>
+          <circle cx="37" cy="23" r="1" fill="#1A1A1A"/>
+
+          {/* Window Rim */}
+          <circle cx="32" cy="32" r="6" fill="#88CCFF" stroke="#444444" strokeWidth="3"/>
+          <circle cx="32" cy="32" r="7.5" fill="none" stroke="#1A1A1A" strokeWidth="2.5"/>
+
+          {/* Window Glass Highlight */}
+          <path d="M29 29 A4 4 0 0 1 34 29" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+        </g>
       </svg>
     </div>
   );
