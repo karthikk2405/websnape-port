@@ -55,7 +55,7 @@ export const HeroSection: React.FC = () => {
       {/* Center Copy Container */}
       <div className="relative z-20 max-w-4xl mx-auto text-center">
         {/* Eyebrow badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-black/10 backdrop-blur-md mb-6 shadow-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-black/10 backdrop-blur-md mb-6 shadow-sm animate-fade-in-up">
           <Sparkles className="w-3.5 h-3.5 text-[#C87A4B]" />
           <span className="text-xs font-extrabold tracking-widest text-[#C87A4B] uppercase">
             DIGITAL SYSTEMS FOR CAFÉS & RESTAURANTS
@@ -63,18 +63,18 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Main RYND Editorial Headline */}
-        <h1 className="rynd-title text-[#F7F5EF] text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight mb-6 drop-shadow-xl">
+        <h1 className="rynd-title text-[#F7F5EF] text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight mb-6 drop-shadow-xl animate-fade-in-up delay-200">
           Make your café<br />
           <span className="gradient-text-coffee">feel alive.</span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl text-[#44433E] max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+        <p className="text-lg sm:text-xl text-[#ECEAE2] max-w-2xl mx-auto mb-10 leading-relaxed font-medium drop-shadow-md animate-fade-in-up delay-300">
           WebSnape builds cinematic 3D websites and connected smart QR table ordering experiences designed specifically for ambitious cafés, restaurants, and food venues.
         </p>
 
         {/* Hero CTA Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
           <a
             href="#services"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#121212] text-[#F7F5EF] font-bold text-base px-8 py-4 rounded-full shadow-[0_10px_30px_rgba(18,18,18,0.2)] hover:bg-[#C87A4B] hover:shadow-[0_12px_40px_rgba(200,122,75,0.4)] hover:scale-105 active:scale-95 transition-all duration-200"
@@ -92,13 +92,13 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Trust Badges */}
-        <div className="mt-16 pt-8 border-t border-black/10 flex flex-wrap items-center justify-center gap-8 text-xs text-[#55544E] font-semibold">
+        <div className="mt-16 pt-8 border-t border-black/10 flex flex-wrap items-center justify-center gap-8 text-xs text-[#55544E] font-semibold animate-fade-in-up delay-500">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#4A6B5D]" />
             <span>Zero App Download for Guests</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#C87A4B]" />
+            <span className="w-2 h-2 rounded-full bg-[#C87A4B] animate-pulse-dot" />
             <span>Instant Kitchen & Barista Sync</span>
           </div>
           <div className="flex items-center gap-2">

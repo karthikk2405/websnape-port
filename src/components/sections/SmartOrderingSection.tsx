@@ -22,11 +22,11 @@ export const SmartOrderingSection: React.FC = () => {
         <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#C87A4B] mb-2 block">
           SMART ORDERING SYSTEM / PRODUCT 02
         </span>
-        <h2 className="rynd-title text-5xl sm:text-7xl text-[#F7F5EF] mb-6 drop-shadow-md">
+        <h2 className="rynd-title text-5xl sm:text-7xl text-[#121212] mb-6">
           Scan. Order.<br />
           <span className="gradient-text-coffee">Done.</span>
         </h2>
-        <p className="text-lg text-[#ECEAE2] leading-relaxed font-medium">
+        <p className="text-lg text-[#55544E] leading-relaxed font-medium">
           Turn every café table into an autonomous digital ordering point. No waiting for staff, no order entry errors, and direct real-time barista integration.
         </p>
       </div>

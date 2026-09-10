@@ -13,7 +13,7 @@ import { Footer } from './components/Footer';
 export const App: React.FC = () => {
   return (
     <DemoProvider>
-      <div className="min-h-screen bg-[#050505] text-[#f6f6f4] relative selection:bg-[#4deaff] selection:text-black">
+      <div className="min-h-screen bg-[#ECEAE2] text-[#121212] relative selection:bg-[#C87A4B] selection:text-white">
         {/* Sticky Glass Navbar */}
         <Navbar />
 

@@ -92,11 +92,11 @@ export const DemoLaboratorySection: React.FC = () => {
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#C87A4B] mb-2 block">
             INTERCONNECTED LIVE CAFÉ DEMO LABORATORY
           </span>
-          <h2 className="rynd-title text-4xl sm:text-6xl text-[#F7F5EF] drop-shadow-md">
+          <h2 className="rynd-title text-4xl sm:text-6xl text-[#121212]">
             See the order <span className="gradient-text-coffee">move live.</span>
           </h2>
         </div>
-        <p className="text-[#ECEAE2] max-w-md text-base leading-relaxed font-medium">
+        <p className="text-[#55544E] max-w-md text-base leading-relaxed font-medium">
           Test the complete WebSnape engine. Place an order in the Customer App and watch it instantly chime on the Kitchen Screen and update Admin Analytics!
         </p>
       </div>
