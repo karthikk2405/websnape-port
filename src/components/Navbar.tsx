@@ -17,10 +17,11 @@ export const Navbar: React.FC = () => {
 
   const navItems = [
     { label: 'Home', href: '#home' },
-    { label: 'Café Services', href: '#services' },
-    { label: 'Smart Ordering', href: '#ordering' },
+    { label: 'Web Services', href: '#services' },
+    { label: 'Smart Ordering System', href: '#ordering' },
+    { label: 'SEO Management', href: '#seo' },
     { label: 'Demo Sandbox', href: '#lab' },
-    { label: 'About Studio', href: '#about' },
+    { label: 'About', href: '#about' },
     { label: 'Contact', href: '#contact' },
   ];
 

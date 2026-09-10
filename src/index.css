@@ -20,7 +20,7 @@ body {
   margin: 0;
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
@@ -36,10 +36,15 @@ body::after {
 }
 
 .rynd-title {
-  font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.065em;
-  line-height: 0.9;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+
+/* Mono labels */
+.font-mono {
+  font-family: 'Space Mono', monospace !important;
 }
 
 .gradient-text {
@@ -176,3 +181,34 @@ body::after {
 .delay-500 { animation-delay: 0.5s; }
 .delay-700 { animation-delay: 0.7s; }
 .delay-1000 { animation-delay: 1.0s; }
+
+/* ── Rocket Tour Around Website ─────────────────────────── */
+@keyframes rocketTour {
+  0%   { transform: translate(0, 0) rotate(-45deg) scale(1); opacity: 0; }
+  3%   { opacity: 1; }
+  15%  { transform: translate(-35vw, -25vh) rotate(-110deg) scale(1.1); opacity: 1; }
+  30%  { transform: translate(-55vw, -55vh) rotate(-190deg) scale(1.2); opacity: 1; }
+  45%  { transform: translate(10vw, -70vh) rotate(-260deg) scale(1.15); opacity: 1; }
+  60%  { transform: translate(50vw, -45vh) rotate(-320deg) scale(1.1); opacity: 1; }
+  75%  { transform: translate(30vw, -10vh) rotate(-380deg) scale(1.05); opacity: 1; }
+  90%  { transform: translate(5vw, 5vh) rotate(-430deg) scale(1); opacity: 1; }
+  97%  { opacity: 1; }
+  100% { transform: translate(0, 0) rotate(-45deg) scale(1); opacity: 0; }
+}
+
+.rocket-tour {
+  position: fixed;
+  bottom: 32px;
+  right: 40px;
+  width: 52px;
+  height: 52px;
+  z-index: 9999;
+  pointer-events: none;
+  animation: rocketTour 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-play-state: paused;
+  filter: drop-shadow(0 4px 16px rgba(200,122,75,0.6));
+}
+
+.rocket-tour.flying {
+  animation-play-state: running;
+}
