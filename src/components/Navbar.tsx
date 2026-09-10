@@ -43,7 +43,7 @@ export const Navbar: React.FC = () => {
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-[#55544E]">
+        <nav className="hidden xl:flex items-center gap-6 text-[13px] font-semibold text-[#55544E]">
           {navItems.map((item) => (
             <a
               key={item.label}
@@ -57,7 +57,7 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Right CTA Button */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4">
           <a
             href="#lab"
             onClick={() => setActiveDemoView('customer')}
@@ -66,19 +66,12 @@ export const Navbar: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
             Live Café Demo
           </a>
-          <a
-            href="#contact"
-            className="relative inline-flex items-center gap-2 bg-[#121212] text-[#F7F5EF] font-bold text-sm px-5 py-2.5 rounded-full shadow-[0_4px_20px_rgba(18,18,18,0.15)] hover:bg-[#C87A4B] hover:shadow-[0_6px_28px_rgba(200,122,75,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
-          >
-            Start a project
-            <ArrowUpRight className="w-4 h-4" />
-          </a>
         </div>
 
         {/* Mobile Menu Toggle Button */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden text-[#121212] p-2 focus:outline-none"
+          className="xl:hidden text-[#121212] p-2 focus:outline-none"
           aria-label="Toggle Navigation Menu"
         >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -108,13 +101,6 @@ export const Navbar: React.FC = () => {
               className="w-full text-center text-sm font-bold text-[#C87A4B] border border-[#C87A4B]/40 py-3 rounded-full"
             >
               Open Live Café Demo
-            </a>
-            <a
-              href="#contact"
-              onClick={() => setMobileOpen(false)}
-              className="w-full text-center bg-[#121212] text-[#F7F5EF] font-bold text-sm py-3 rounded-full shadow-lg"
-            >
-              Start a project ↗
             </a>
           </div>
         </div>
