@@ -1,340 +1,413 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
-interface RocketSceneProps {
-  launched: boolean;
-}
+// ─── Clay material helper ───────────────────────────────────────────
+const clayProps = (color: string, emissive = '#000000', emissiveIntensity = 0) => ({
+  color,
+  roughness: 0.88,
+  metalness: 0.0,
+  emissive,
+  emissiveIntensity,
+});
+
+// ─── Outline helper: duplicate mesh scaled up on back side ─────────
+const Outline: React.FC<{ scale?: number }> = ({ scale = 1.06 }) => (
+  <mesh scale={scale}>
+    <sphereGeometry args={[1, 1, 1]} />
+    <meshBasicMaterial color="#2A1F1A" side={THREE.BackSide} transparent opacity={0.0} />
+  </mesh>
+);
+
+// ─── A single claymorphism sphere with soft outline ─────────────────
+const ClayBall: React.FC<{
+  position: [number, number, number];
+  radius: number;
+  color: string;
+  emissive?: string;
+  emissiveIntensity?: number;
+  outlineScale?: number;
+}> = ({ position, radius, color, emissive = '#000', emissiveIntensity = 0, outlineScale = 1.09 }) => (
+  <group position={position}>
+    <mesh>
+      <sphereGeometry args={[radius, 32, 32]} />
+      <meshStandardMaterial {...clayProps(color, emissive, emissiveIntensity)} />
+    </mesh>
+    {/* Clay outline */}
+    <mesh scale={outlineScale}>
+      <sphereGeometry args={[radius, 32, 32]} />
+      <meshBasicMaterial color="#1A1010" side={THREE.BackSide} transparent opacity={0.18} />
+    </mesh>
+  </group>
+);
+
+// ─── Clay Cylinder with outline ─────────────────────────────────────
+const ClayCylinder: React.FC<{
+  position: [number, number, number];
+  args: [number, number, number, number];
+  color: string;
+  emissive?: string;
+  emissiveIntensity?: number;
+  rotation?: [number, number, number];
+}> = ({ position, args, color, emissive = '#000', emissiveIntensity = 0, rotation = [0, 0, 0] }) => (
+  <group position={position} rotation={rotation}>
+    <mesh>
+      <cylinderGeometry args={args} />
+      <meshStandardMaterial {...clayProps(color, emissive, emissiveIntensity)} />
+    </mesh>
+    <mesh scale={1.07}>
+      <cylinderGeometry args={args} />
+      <meshBasicMaterial color="#1A1010" side={THREE.BackSide} transparent opacity={0.16} />
+    </mesh>
+  </group>
+);
+
+// ─── Clay Cone with outline ─────────────────────────────────────────
+const ClayCone: React.FC<{
+  position: [number, number, number];
+  args: [number, number, number];
+  color: string;
+  emissive?: string;
+  emissiveIntensity?: number;
+}> = ({ position, args, color, emissive = '#000', emissiveIntensity = 0 }) => (
+  <group position={position}>
+    <mesh>
+      <coneGeometry args={args} />
+      <meshStandardMaterial {...clayProps(color, emissive, emissiveIntensity)} />
+    </mesh>
+    <mesh scale={1.08}>
+      <coneGeometry args={args} />
+      <meshBasicMaterial color="#1A1010" side={THREE.BackSide} transparent opacity={0.16} />
+    </mesh>
+  </group>
+);
+
+// ─── Main Rocket Scene ───────────────────────────────────────────────
+interface RocketSceneProps { launched: boolean }
 
 const RocketScene: React.FC<RocketSceneProps> = ({ launched }) => {
-  const rocketRef = useRef<THREE.Group>(null);
-  const exhaustRef = useRef<THREE.Group>(null);
-  const flameRef = useRef<THREE.Mesh>(null);
-  const flame2Ref = useRef<THREE.Mesh>(null);
-  const particleGroupRef = useRef<THREE.Group>(null);
-  const platformRef = useRef<THREE.Group>(null);
+  const rocketRef   = useRef<THREE.Group>(null);
+  const flameRef    = useRef<THREE.Group>(null);
+  const cloudRef    = useRef<THREE.Group>(null);
+  const sparkGroupRef = useRef<THREE.Group>(null);
 
-  // Smooth launch animation state
-  const launchProgress = useRef(0);
-  const idleTime = useRef(0);
+  const progress  = useRef(0);
+  const idleT     = useRef(0);
 
   useFrame((state, delta) => {
-    const t = state.clock.getElapsedTime();
-    idleTime.current += delta;
+    idleT.current += delta;
+    const t = idleT.current;
 
-    if (launched) {
-      launchProgress.current = Math.min(launchProgress.current + delta * 0.6, 1);
-    } else {
-      launchProgress.current = Math.max(launchProgress.current - delta * 0.3, 0);
-    }
+    if (launched) progress.current = Math.min(progress.current + delta * 0.55, 1);
+    else          progress.current = Math.max(progress.current - delta * 0.4,  0);
 
-    const p = launchProgress.current;
-    // Eased launch curve: slow start → fast exit
-    const easedP = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    const p = progress.current;
+    const ease = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 
+    // Rocket idle float + launch rise
     if (rocketRef.current) {
-      // Idle hover
-      const idleBob = Math.sin(idleTime.current * 1.4) * 0.06;
-      const idleTilt = Math.sin(idleTime.current * 0.9) * 0.03;
-
-      // Launch trajectory: rises + tilts slightly
-      const launchY = easedP * 5.5;
-      const launchTiltZ = easedP * -0.08;
-
-      rocketRef.current.position.y = -0.6 + idleBob + launchY;
-      rocketRef.current.rotation.z = idleTilt + launchTiltZ;
-      rocketRef.current.rotation.y = t * 0.3;
+      const bob   = Math.sin(t * 1.2) * 0.07;
+      const tilt  = Math.sin(t * 0.8) * 0.025;
+      rocketRef.current.position.y  = -0.1 + bob + ease * 5.5;
+      rocketRef.current.rotation.z  = tilt - ease * 0.05;
+      rocketRef.current.rotation.y  = t * 0.25;
     }
 
-    // Platform sinks slightly when rocket launches
-    if (platformRef.current) {
-      platformRef.current.position.y = -1.8 - easedP * 0.3;
-    }
-
-    // Exhaust glow flicker
-    if (exhaustRef.current) {
-      const flicker = 0.85 + Math.random() * 0.3;
-      exhaustRef.current.scale.setScalar(flicker * (0.4 + easedP * 0.8));
-      exhaustRef.current.position.y = -1.05 - easedP * 0.1;
-    }
-
-    // Main flame scale
+    // Flame pulsing
     if (flameRef.current) {
-      const flicker = 0.9 + Math.random() * 0.2;
-      const intensity = 0.3 + easedP * 1.0;
+      const flicker = 0.88 + Math.random() * 0.24;
+      const intensity = 0.25 + ease * 1.1;
       flameRef.current.scale.y = flicker * intensity;
-      flameRef.current.scale.x = flicker * (0.6 + easedP * 0.4);
-      (flameRef.current.material as THREE.MeshBasicMaterial).opacity = 0.7 + easedP * 0.3;
+      flameRef.current.scale.x = flicker * (0.7 + ease * 0.5);
+      flameRef.current.scale.z = flicker * (0.7 + ease * 0.5);
+      flameRef.current.position.y = -1.15 - ease * 0.08;
     }
 
-    // Inner flame
-    if (flame2Ref.current) {
-      const flicker = 0.85 + Math.random() * 0.3;
-      flame2Ref.current.scale.y = flicker * (0.5 + easedP * 0.8);
-      (flame2Ref.current.material as THREE.MeshBasicMaterial).opacity = 0.6 + easedP * 0.4;
+    // Cloud puff
+    if (cloudRef.current) {
+      cloudRef.current.children.forEach((c, i) => {
+        const m = c as THREE.Mesh;
+        m.position.y -= delta * (0.15 + (i % 4) * 0.08) * (0.4 + ease * 2.0);
+        m.position.x += Math.sin(t * 3 + i * 1.4) * delta * 0.12;
+        const mat = m.material as THREE.MeshStandardMaterial;
+        mat.opacity -= delta * (0.35 + ease * 0.7);
+        if (mat.opacity <= 0.05 || m.position.y < -3.2) {
+          m.position.set(
+            (Math.random() - 0.5) * 0.55,
+            -1.0 - Math.random() * 0.3,
+            (Math.random() - 0.5) * 0.55,
+          );
+          mat.opacity = 0.55 + Math.random() * 0.3;
+        }
+      });
     }
 
-    // Exhaust particles rise and fade
-    if (particleGroupRef.current) {
-      particleGroupRef.current.children.forEach((child, i) => {
-        const mesh = child as THREE.Mesh;
-        const speed = 0.3 + (i % 4) * 0.15;
-        mesh.position.y -= delta * speed * (0.5 + easedP * 2.5);
-        const spreadX = Math.sin(idleTime.current * 2 + i * 1.3) * 0.02;
-        mesh.position.x += spreadX;
-        (mesh.material as THREE.MeshBasicMaterial).opacity -= delta * 0.8;
-
-        if (mesh.position.y < -2.2 || (mesh.material as THREE.MeshBasicMaterial).opacity <= 0) {
-          mesh.position.y = -1.1;
-          mesh.position.x = (Math.random() - 0.5) * 0.18;
-          mesh.position.z = (Math.random() - 0.5) * 0.18;
-          (mesh.material as THREE.MeshBasicMaterial).opacity = 0.7 + Math.random() * 0.3;
+    // Sparks
+    if (sparkGroupRef.current) {
+      sparkGroupRef.current.children.forEach((c, i) => {
+        const m = c as THREE.Mesh;
+        const speed = 0.4 + (i % 5) * 0.15;
+        m.position.y -= delta * speed * (1.0 + ease * 3.0);
+        m.position.x += Math.sin(t * 4 + i * 2.1) * delta * 0.3;
+        m.position.z += Math.cos(t * 3.5 + i * 1.7) * delta * 0.2;
+        const mat = m.material as THREE.MeshBasicMaterial;
+        mat.opacity -= delta * 1.5;
+        if (mat.opacity <= 0 || m.position.y < -2.5) {
+          m.position.set(
+            (Math.random() - 0.5) * 0.2,
+            -0.95 - Math.random() * 0.15,
+            (Math.random() - 0.5) * 0.2,
+          );
+          mat.opacity = 0.9 + Math.random() * 0.1;
         }
       });
     }
   });
 
-  // Particle positions
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    x: (Math.random() - 0.5) * 0.2,
-    y: -1.1 - Math.random() * 0.4,
-    z: (Math.random() - 0.5) * 0.2,
-    size: 0.02 + Math.random() * 0.04,
-    color: i % 3 === 0 ? '#C87A4B' : i % 3 === 1 ? '#FFFFFF' : '#7EB8FF',
+  // ── Clouds: soft white puffy spheres ──────────────────────────────
+  const cloudPuffs = Array.from({ length: 24 }, (_, i) => ({
+    x: (Math.random() - 0.5) * 0.6,
+    y: -1.0 - Math.random() * 0.4,
+    z: (Math.random() - 0.5) * 0.6,
+    r: 0.06 + Math.random() * 0.1,
+    op: 0.5 + Math.random() * 0.35,
   }));
+
+  // ── Sparks: tiny colored dots ─────────────────────────────────────
+  const sparkColors = ['#FFCC44', '#FF8844', '#FFAAAA', '#FFE066', '#FF6622'];
+  const sparks = Array.from({ length: 18 }, (_, i) => ({
+    x: (Math.random() - 0.5) * 0.22,
+    y: -0.97 - Math.random() * 0.1,
+    z: (Math.random() - 0.5) * 0.22,
+    r: 0.018 + Math.random() * 0.022,
+    color: sparkColors[i % sparkColors.length],
+  }));
+
+  // ── Café palette clays ─────────────────────────────────────────────
+  const BODY    = '#F2DDD0'; // warm cream
+  const NOSE    = '#C87A4B'; // coffee copper
+  const FIN     = '#D46A43'; // terracotta
+  const WINDOW  = '#5A9B88'; // sage teal
+  const ENGINE  = '#E8C9B4'; // light peach
+  const PAD     = '#EDE8DF'; // off-white pad
+  const STRIPE  = '#E4A882'; // light copper
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0.5, 5.5]} fov={40} />
+      <PerspectiveCamera makeDefault position={[0, 0.8, 6.0]} fov={38} />
 
-      {/* Cinematic Lighting */}
-      <ambientLight intensity={0.5} />
-      <pointLight position={[0, -1, 2]} intensity={6} color="#7EB8FF" />
-      <pointLight position={[-2, 2, 2]} intensity={3} color="#C87A4B" />
-      <pointLight position={[2, 3, 1]} intensity={2} color="#FFFFFF" />
-      <pointLight position={[0, -2, 1]} intensity={4} color="#4488FF" />
+      {/* ── Soft clay lighting ────────────────────────────────────── */}
+      <ambientLight intensity={1.1} color="#FFF5EE" />
+      <directionalLight position={[3, 6, 4]}  intensity={2.2} color="#FFF2E8" castShadow />
+      <directionalLight position={[-3, 2, 2]} intensity={1.0} color="#E8D5C8" />
+      <pointLight position={[0, -1, 2]}       intensity={3.5} color="#FFCC88" />
+      <pointLight position={[0, 4, 3]}        intensity={1.5} color="#FFE8D8" />
 
-      {/* ===== LAUNCH PLATFORM ===== */}
-      <group ref={platformRef} position={[0, -1.8, 0]}>
-        {/* Glass browser card base */}
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[2.4, 0.06, 1.6]} />
-          <meshPhysicalMaterial
-            color="#B8C8E8"
-            roughness={0.05}
-            metalness={0.1}
-            transmission={0.6}
-            opacity={0.8}
-            transparent
-            ior={1.45}
-          />
+      {/* ── Launch Pad ────────────────────────────────────────────── */}
+      <group position={[0, -1.85, 0]}>
+        {/* Main platform — rounded box */}
+        <RoundedBox args={[2.6, 0.18, 1.8]} radius={0.1} smoothness={4} position={[0, 0, 0]}>
+          <meshStandardMaterial {...clayProps(PAD)} />
+        </RoundedBox>
+        {/* Outline */}
+        <mesh position={[0, 0, 0]} scale={1.04}>
+          <boxGeometry args={[2.6, 0.18, 1.8]} />
+          <meshBasicMaterial color="#1A1010" side={THREE.BackSide} transparent opacity={0.12} />
         </mesh>
-        {/* Browser chrome bar */}
-        <mesh position={[0, 0.05, 0.55]}>
-          <boxGeometry args={[2.4, 0.08, 0.45]} />
-          <meshPhysicalMaterial
-            color="#C8D8F0"
-            roughness={0.1}
-            metalness={0.1}
-            transmission={0.5}
-            transparent
-            opacity={0.75}
-            ior={1.4}
-          />
+
+        {/* Browser dots row */}
+        {[[-0.9, '#FF7B7B'], [-0.65, '#FFCC66'], [-0.4, '#88D497']].map(([x, col]) => (
+          <ClayBall key={x} position={[x as number, 0.13, 0.72]} radius={0.06} color={col as string} />
+        ))}
+
+        {/* Rounded content lines */}
+        {[0.25, -0.05, -0.3].map((z, i) => (
+          <RoundedBox key={i} args={[1.8, 0.055, 0.1]} radius={0.025} smoothness={4} position={[i === 0 ? -0.1 : 0, 0.09, z]}>
+            <meshStandardMaterial {...clayProps(i === 0 ? STRIPE : '#D8D0C8')} />
+          </RoundedBox>
+        ))}
+
+        {/* 4 Stubby feet */}
+        {[[-0.8, 0.7], [0.8, 0.7], [-0.8, -0.7], [0.8, -0.7]].map(([x, z], i) => (
+          <ClayCylinder key={i} position={[x, -0.22, z]} args={[0.07, 0.07, 0.28, 16]} color={STRIPE} />
+        ))}
+
+        {/* Center launch ring */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]}>
+          <ringGeometry args={[0.2, 0.28, 32]} />
+          <meshStandardMaterial {...clayProps(STRIPE)} side={THREE.DoubleSide} />
         </mesh>
-        {/* Browser dots */}
-        {[-0.85, -0.65, -0.45].map((x, i) => (
-          <mesh key={i} position={[x, 0.09, 0.65]}>
-            <sphereGeometry args={[0.04, 12, 12]} />
-            <meshBasicMaterial color={i === 0 ? '#FF6B6B' : i === 1 ? '#FFD93D' : '#6BCB77'} />
-          </mesh>
-        ))}
-        {/* Body content lines */}
-        {[-0.3, 0, 0.3].map((z, i) => (
-          <mesh key={i} position={[0, 0.04, z - 0.1]}>
-            <boxGeometry args={[1.8, 0.012, 0.06]} />
-            <meshBasicMaterial color="#A0B8D8" transparent opacity={0.5} />
-          </mesh>
-        ))}
-        {/* Glass border glow */}
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[2.42, 0.065, 1.62]} />
-          <meshBasicMaterial color="#7EB8FF" transparent opacity={0.15} side={THREE.BackSide} />
-        </mesh>
-        {/* Platform support legs */}
-        {[[-0.7, 0.5], [0.7, 0.5], [-0.7, -0.5], [0.7, -0.5]].map(([x, z], i) => (
-          <mesh key={i} position={[x, -0.25, z]}>
-            <cylinderGeometry args={[0.03, 0.03, 0.45, 8]} />
-            <meshStandardMaterial color="#8AA0C0" metalness={0.8} roughness={0.2} />
-          </mesh>
-        ))}
       </group>
 
-      {/* ===== ROCKET ===== */}
-      <group ref={rocketRef} position={[0, -0.6, 0]}>
+      {/* ── ROCKET GROUP ────────────────────────────────────────────── */}
+      <group ref={rocketRef} position={[0, -0.1, 0]}>
 
-        {/* === ROCKET BODY === */}
-        <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[0.22, 0.26, 1.3, 32]} />
-          <meshPhysicalMaterial
-            color="#C8D8F0"
-            roughness={0.05}
-            metalness={0.85}
-            clearcoat={1.0}
-            clearcoatRoughness={0.05}
-            reflectivity={1.0}
-            envMapIntensity={1.5}
-          />
-        </mesh>
-
-        {/* Body blue stripe */}
-        <mesh position={[0, 0.1, 0]}>
-          <cylinderGeometry args={[0.225, 0.225, 0.18, 32]} />
-          <meshStandardMaterial color="#4466CC" metalness={0.7} roughness={0.2} emissive="#2244AA" emissiveIntensity={0.3} />
-        </mesh>
-
-        {/* === NOSE CONE === */}
-        <mesh position={[0, 0.9, 0]}>
-          <coneGeometry args={[0.22, 0.65, 32]} />
-          <meshPhysicalMaterial
-            color="#5577DD"
-            roughness={0.05}
-            metalness={0.7}
-            clearcoat={1.0}
-            emissive="#3355BB"
-            emissiveIntensity={0.2}
-          />
-        </mesh>
-
-        {/* Window porthole */}
-        <mesh position={[0, 0.3, 0.22]}>
-          <circleGeometry args={[0.1, 32]} />
-          <meshPhysicalMaterial
-            color="#88AAFF"
-            roughness={0.0}
-            metalness={0.0}
-            transmission={0.3}
-            emissive="#4466FF"
-            emissiveIntensity={0.8}
-          />
-        </mesh>
-        {/* Porthole rim */}
-        <mesh position={[0, 0.3, 0.215]}>
-          <ringGeometry args={[0.1, 0.13, 32]} />
-          <meshStandardMaterial color="#8899CC" metalness={0.9} roughness={0.1} />
-        </mesh>
-
-        {/* === FINS (4x) === */}
-        {[0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].map((angle, i) => (
-          <group key={i} rotation={[0, angle, 0]}>
-            <mesh position={[0.3, -0.55, 0]} rotation={[0, 0, 0.15]}>
-              <boxGeometry args={[0.22, 0.42, 0.04]} />
-              <meshPhysicalMaterial
-                color="#4466CC"
-                roughness={0.1}
-                metalness={0.8}
-                clearcoat={0.8}
-                emissive="#223388"
-                emissiveIntensity={0.2}
-              />
-            </mesh>
-          </group>
-        ))}
-
-        {/* === ENGINE NOZZLE === */}
-        <mesh position={[0, -0.72, 0]}>
-          <cylinderGeometry args={[0.14, 0.2, 0.22, 24]} />
-          <meshStandardMaterial color="#888888" metalness={0.95} roughness={0.1} />
-        </mesh>
-        <mesh position={[0, -0.84, 0]}>
-          <cylinderGeometry args={[0.12, 0.14, 0.06, 24]} />
-          <meshStandardMaterial color="#555555" metalness={0.95} roughness={0.05} />
-        </mesh>
-
-        {/* === EXHAUST GROUP === */}
-        <group ref={exhaustRef} position={[0, -1.05, 0]}>
-          {/* Outer flame cone */}
-          <mesh ref={flameRef} position={[0, -0.2, 0]}>
-            <coneGeometry args={[0.18, 0.55, 24]} />
-            <meshBasicMaterial color="#7EB8FF" transparent opacity={0.8} side={THREE.DoubleSide} />
+        {/* == BODY == */}
+        <group position={[0, 0, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.28, 0.31, 1.4, 40]} />
+            <meshStandardMaterial {...clayProps(BODY)} />
           </mesh>
-          {/* Mid flame */}
-          <mesh ref={flame2Ref} position={[0, -0.15, 0]}>
-            <coneGeometry args={[0.1, 0.38, 24]} />
-            <meshBasicMaterial color="#AADDFF" transparent opacity={0.9} side={THREE.DoubleSide} />
-          </mesh>
-          {/* Core white flame */}
-          <mesh position={[0, -0.08, 0]}>
-            <coneGeometry args={[0.045, 0.2, 16]} />
-            <meshBasicMaterial color="#FFFFFF" transparent opacity={0.95} />
-          </mesh>
-          {/* Glow sphere at nozzle */}
-          <mesh position={[0, 0, 0]}>
-            <sphereGeometry args={[0.14, 16, 16]} />
-            <meshBasicMaterial color="#88CCFF" transparent opacity={0.35} />
+          {/* Clay body outline */}
+          <mesh scale={1.065}>
+            <cylinderGeometry args={[0.28, 0.31, 1.4, 40]} />
+            <meshBasicMaterial color="#2A1A10" side={THREE.BackSide} transparent opacity={0.18} />
           </mesh>
         </group>
 
-        {/* === EXHAUST PARTICLES === */}
-        <group ref={particleGroupRef}>
-          {particles.map((p, i) => (
-            <mesh key={i} position={[p.x, p.y, p.z]}>
-              <sphereGeometry args={[p.size, 6, 6]} />
-              <meshBasicMaterial color={p.color} transparent opacity={0.7} />
+        {/* == COPPER STRIPE around body == */}
+        <group position={[0, 0.15, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.285, 0.285, 0.22, 32]} />
+            <meshStandardMaterial {...clayProps(STRIPE, NOSE, 0.05)} />
+          </mesh>
+        </group>
+
+        {/* == NOSE CONE == (puffy, rounded) */}
+        <group position={[0, 0.98, 0]}>
+          <mesh>
+            <coneGeometry args={[0.28, 0.72, 40]} />
+            <meshStandardMaterial {...clayProps(NOSE, '#B06030', 0.04)} />
+          </mesh>
+          <mesh scale={1.07}>
+            <coneGeometry args={[0.28, 0.72, 40]} />
+            <meshBasicMaterial color="#2A1010" side={THREE.BackSide} transparent opacity={0.18} />
+          </mesh>
+          {/* Nose tip ball for roundness */}
+          <ClayBall position={[0, 0.35, 0]} radius={0.1} color={NOSE} emissive="#AA5520" emissiveIntensity={0.04} outlineScale={1.1} />
+        </group>
+
+        {/* == WINDOW porthole == */}
+        <ClayBall position={[0, 0.32, 0.25]} radius={0.115} color={WINDOW} emissive="#3A8070" emissiveIntensity={0.2} outlineScale={1.12} />
+        {/* Window rim */}
+        <ClayBall position={[0, 0.32, 0.22]} radius={0.15} color={BODY} outlineScale={1.05} />
+        {/* Reflection dot on window */}
+        <ClayBall position={[-0.04, 0.37, 0.36]} radius={0.03} color="#FFFFFF" outlineScale={1.0} />
+
+        {/* == 4 FINS == (rounded, puffy) */}
+        {[0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].map((angle, i) => (
+          <group key={i} rotation={[0, angle, 0]}>
+            <group position={[0.33, -0.55, 0]} rotation={[0, 0, 0.18]}>
+              <mesh>
+                <cylinderGeometry args={[0.04, 0.14, 0.52, 20]} />
+                <meshStandardMaterial {...clayProps(FIN, '#AA4020', 0.03)} />
+              </mesh>
+              <mesh scale={1.08}>
+                <cylinderGeometry args={[0.04, 0.14, 0.52, 20]} />
+                <meshBasicMaterial color="#2A1010" side={THREE.BackSide} transparent opacity={0.16} />
+              </mesh>
+              {/* Fin tip ball */}
+              <ClayBall position={[0, -0.25, 0]} radius={0.075} color={FIN} outlineScale={1.1} />
+            </group>
+          </group>
+        ))}
+
+        {/* == ENGINE BELL == */}
+        <group position={[0, -0.78, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.15, 0.24, 0.26, 32]} />
+            <meshStandardMaterial {...clayProps(ENGINE)} />
+          </mesh>
+          <mesh scale={1.08}>
+            <cylinderGeometry args={[0.15, 0.24, 0.26, 32]} />
+            <meshBasicMaterial color="#1A0A00" side={THREE.BackSide} transparent opacity={0.16} />
+          </mesh>
+          {/* Nozzle ball bottom */}
+          <ClayBall position={[0, -0.16, 0]} radius={0.13} color={STRIPE} outlineScale={1.09} />
+        </group>
+
+        {/* == EXHAUST FLAME == (clay-style soft cones) */}
+        <group ref={flameRef} position={[0, -1.15, 0]}>
+          {/* Outer puff — soft orange */}
+          <mesh position={[0, -0.22, 0]}>
+            <coneGeometry args={[0.22, 0.65, 32]} />
+            <meshStandardMaterial color="#FF9944" roughness={0.9} metalness={0} transparent opacity={0.82} side={THREE.DoubleSide} />
+          </mesh>
+          {/* Mid puff — yellow */}
+          <mesh position={[0, -0.16, 0]}>
+            <coneGeometry args={[0.14, 0.48, 32]} />
+            <meshStandardMaterial color="#FFDD33" roughness={0.9} metalness={0} transparent opacity={0.88} side={THREE.DoubleSide} />
+          </mesh>
+          {/* Inner core — cream white */}
+          <mesh position={[0, -0.08, 0]}>
+            <coneGeometry args={[0.07, 0.28, 24]} />
+            <meshStandardMaterial color="#FFF8EE" roughness={0.95} metalness={0} transparent opacity={0.95} />
+          </mesh>
+          {/* Glow ball at nozzle */}
+          <ClayBall position={[0, 0.04, 0]} radius={0.14} color="#FFBB55" emissive="#FF8800" emissiveIntensity={0.6} outlineScale={1.0} />
+        </group>
+
+        {/* == CLOUD PUFFS == */}
+        <group ref={cloudRef}>
+          {cloudPuffs.map((c, i) => (
+            <mesh key={i} position={[c.x, c.y, c.z]}>
+              <sphereGeometry args={[c.r, 16, 16]} />
+              <meshStandardMaterial color="#FFFFFF" roughness={0.95} metalness={0} transparent opacity={c.op} />
             </mesh>
           ))}
         </group>
 
-        {/* Speed lines (streaks during launch) */}
-        {launched && [-0.35, -0.1, 0.15, 0.35].map((x, i) => (
-          <mesh key={i} position={[x, -0.4 - i * 0.3, (i % 2 === 0 ? 0.15 : -0.15)]}>
-            <boxGeometry args={[0.015, 0.25 + i * 0.1, 0.015]} />
-            <meshBasicMaterial color="#FFFFFF" transparent opacity={0.3 - i * 0.05} />
-          </mesh>
+        {/* == SPARKS == */}
+        <group ref={sparkGroupRef}>
+          {sparks.map((s, i) => (
+            <mesh key={i} position={[s.x, s.y, s.z]}>
+              <sphereGeometry args={[s.r, 8, 8]} />
+              <meshBasicMaterial color={s.color} transparent opacity={0.9} />
+            </mesh>
+          ))}
+        </group>
+
+        {/* Decorative body dots */}
+        {[0.5, -0.1].map((y, i) => (
+          <ClayBall key={i} position={[0.27, y, 0.1]} radius={0.04} color={STRIPE} outlineScale={1.05} />
         ))}
       </group>
     </>
   );
 };
 
+// ─── Canvas Export ───────────────────────────────────────────────────
 export const RocketCanvas: React.FC = () => {
   const [launched, setLaunched] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setLaunched(entry.isIntersecting && entry.intersectionRatio > 0.3);
-      },
-      { threshold: [0.3, 0.7] }
+      ([entry]) => setLaunched(entry.isIntersecting && entry.intersectionRatio >= 0.25),
+      { threshold: [0.25, 0.6] }
     );
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full relative"
-      style={{ height: '480px' }}
-    >
-      <Canvas
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-        dpr={[1, 2]}
-      >
-        <RocketScene launched={launched} />
-      </Canvas>
+    <div ref={containerRef} className="w-full relative select-none" style={{ height: '500px' }}>
+      {/* Soft clay background gradient */}
+      <div className="absolute inset-0 rounded-2xl" style={{
+        background: 'radial-gradient(ellipse at 60% 40%, #FBE8D8 0%, #F0E4D4 40%, #E8DDD0 100%)',
+        zIndex: 0,
+      }} />
 
-      {/* Launch status badge */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
+        <Canvas
+          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          dpr={[1, 2]}
+          shadows
+        >
+          <RocketScene launched={launched} />
+        </Canvas>
+      </div>
+
+      {/* Launch status pill */}
       <div
-        className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-500 ${
-          launched ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        className={`absolute bottom-5 left-1/2 -translate-x-1/2 z-10 transition-all duration-500 ${
+          launched ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
         }`}
       >
-        <span className="inline-flex items-center gap-2 bg-[#121212]/80 backdrop-blur-md text-[#7EB8FF] text-xs font-bold px-4 py-2 rounded-full border border-[#7EB8FF]/30">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#7EB8FF] animate-pulse" />
-          Launch sequence initiated
+        <span className="inline-flex items-center gap-2 bg-[#C87A4B] text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          🚀 Launching order to kitchen...
         </span>
       </div>
     </div>
