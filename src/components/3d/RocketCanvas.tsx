@@ -199,13 +199,13 @@ const RocketScene: React.FC<RocketSceneProps> = ({ launched }) => {
 
         {/* == GLASS WINDOW == */}
         <group position={[0, 0.35, 0.23]}>
-          <mesh>
-            <cylinderGeometry args={[0.12, 0.12, 0.05, 32]} rotation={[Math.PI / 2, 0, 0]} />
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.12, 0.12, 0.05, 32]} />
             <meshPhysicalMaterial {...glassProps('#88CCFF')} />
           </mesh>
           {/* Window Rim */}
-          <mesh position={[0, 0, 0]}>
-            <torusGeometry args={[0.12, 0.015, 16, 64]} rotation={[Math.PI / 2, 0, 0]} />
+          <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.12, 0.015, 16, 64]} />
             <meshPhysicalMaterial {...metallicProps('#FFFFFF')} />
           </mesh>
         </group>
