@@ -1,6 +1,6 @@
 import React from 'react';
 import { QrCode, Smartphone, Layers, ShoppingBag, Send, CheckCircle2, Zap, Utensils, Shield, Sparkles } from 'lucide-react';
-import { Table3DCanvas } from '../3d/Table3DCanvas';
+import { RocketCanvas } from '../3d/RocketCanvas';
 import { useDemo } from '../../context/DemoContext';
 
 export const SmartOrderingSection: React.FC = () => {
@@ -71,9 +71,9 @@ export const SmartOrderingSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right 3D WebGL Canvas Column */}
-          <div className="lg:col-span-7 h-[480px] relative w-full flex items-center justify-center">
-            <Table3DCanvas />
+          {/* Right 3D Rocket Launch Column */}
+          <div className="lg:col-span-7 relative w-full flex items-center justify-center">
+            <RocketCanvas />
           </div>
         </div>
       </div>
