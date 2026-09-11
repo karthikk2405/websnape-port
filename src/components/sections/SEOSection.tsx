@@ -94,11 +94,11 @@ export const SEOSection: React.FC = () => {
       </div>
 
       {/* CTA Panel */}
-      <div className="glass-panel p-10 md:p-14 bg-[#121212] text-white border-0 relative overflow-hidden">
+      <div className="rounded-[22px] p-10 md:p-14 relative overflow-hidden" style={{ background: '#1a1a1a', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 24px 70px rgba(0,0,0,0.25)' }}>
         {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10"
+        <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-15"
           style={{ background: 'radial-gradient(circle, #C87A4B 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
-        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10"
+        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-15"
           style={{ background: 'radial-gradient(circle, #4A6B5D 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }} />
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -110,7 +110,7 @@ export const SEOSection: React.FC = () => {
               See where you stand<br />
               <span className="gradient-text-coffee">in 24 hours.</span>
             </h3>
-            <p className="text-[#9996A0] text-sm leading-relaxed font-medium max-w-md">
+            <p className="text-[#a8a49c] text-sm leading-relaxed font-medium max-w-md">
               Submit your café website URL and we'll send a detailed, no-cost SEO audit report showing exactly what's holding you back from the top of Google.
             </p>
           </div>
@@ -123,7 +123,7 @@ export const SEOSection: React.FC = () => {
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-[#C87A4B] shrink-0 mt-0.5" />
-                <span className="text-sm text-[#D8D4CC] font-medium">{item}</span>
+                <span className="text-sm text-[#e0dcd4] font-medium">{item}</span>
               </div>
             ))}
             <a

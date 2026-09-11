@@ -1,6 +1,5 @@
 import React from 'react';
 import { QrCode, Smartphone, Layers, ShoppingBag, Send, CheckCircle2, Zap, Utensils, Shield, Sparkles } from 'lucide-react';
-import { RocketCanvas } from '../3d/RocketCanvas';
 import { useDemo } from '../../context/DemoContext';
 
 export const SmartOrderingSection: React.FC = () => {
@@ -71,9 +70,21 @@ export const SmartOrderingSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right 3D Rocket Launch Column */}
+          {/* Right 3D Model Column */}
           <div className="lg:col-span-7 relative w-full flex items-center justify-center">
-            <RocketCanvas />
+            <div className="sketchfab-embed-wrapper" style={{ position: 'relative', width: '100%', maxWidth: 600, aspectRatio: '4 / 3', borderRadius: 28, overflow: 'hidden', boxShadow: '0 12px 40px rgba(74,107,93,0.22), 0 2px 12px rgba(0,0,0,0.08)' }}>
+              <iframe
+                title="Cafe-Misti"
+                frameBorder="0"
+                allowFullScreen
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+                src="https://sketchfab.com/models/419c3293b0e54313be4b1f02845d606a/embed?autospin=0.2&autostart=1&ui_theme=dark&dnt=1&ui_infos=0&ui_controls=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0&ui_hint=0&ui_ar=0&ui_help=0&ui_settings=0&ui_inspector=0&ui_fullscreen=0&ui_annotations=0&ui_vr=0&scrollwheel=0&transparent=1"
+                style={{ width: '100%', height: '100%', border: 'none' }}
+              />
+              {/* Overlays to hide Sketchfab attribution & branding */}
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 90, background: 'linear-gradient(to bottom, rgba(212,204,186,1) 0%, rgba(212,204,186,1) 30%, rgba(212,204,186,0.85) 60%, rgba(212,204,186,0) 100%)', pointerEvents: 'none', borderRadius: '28px 28px 0 0', zIndex: 2 }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 80, background: 'linear-gradient(to top, rgba(212,204,186,1) 0%, rgba(212,204,186,1) 30%, rgba(212,204,186,0.85) 55%, rgba(212,204,186,0) 100%)', pointerEvents: 'none', borderRadius: '0 0 28px 28px', zIndex: 2 }} />
+            </div>
           </div>
         </div>
       </div>

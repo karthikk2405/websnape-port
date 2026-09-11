@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Send, CheckCircle2, Sparkles, AlertCircle } from 'lucide-react';
 import { useForm, ValidationError } from '@formspree/react';
 
-// Formspree form — delivers to mkarthikeya31@gmail.com
+// Formspree form — delivers to websnape.services@gmail.com
 const FORMSPREE_ID = 'mzeborzo';
 
 export const ContactSection: React.FC = () => {
@@ -88,7 +88,7 @@ export const ContactSection: React.FC = () => {
                 {state.errors && Array.isArray(state.errors) && state.errors.length > 0 && (
                   <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-700 font-medium">Something went wrong. Please try again or email us directly at mkarthikeya31@gmail.com</p>
+                    <p className="text-sm text-red-700 font-medium">Something went wrong. Please try again or email us directly at websnape.services@gmail.com</p>
                   </div>
                 )}
 

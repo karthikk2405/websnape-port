@@ -110,8 +110,8 @@ export const Footer: React.FC = () => {
             <p className="text-sm text-[#44433E] mb-2">
               Ready to give your café or restaurant a world-class digital experience?
             </p>
-            <p className="text-sm font-bold text-[#C87A4B]">hello@websnape.com</p>
-            <p className="text-xs text-[#666560] mt-1">+91 (800) WEBSNAPE</p>
+            <a href="mailto:websnape.services@gmail.com" className="text-sm font-bold text-[#C87A4B] hover:underline">websnape.services@gmail.com</a>
+            <a href="tel:+918309790949" className="text-xs text-[#666560] mt-1 block hover:text-[#C87A4B] transition-colors">+91 83097 90949</a>
           </div>
         </div>
 
