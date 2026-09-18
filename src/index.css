@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #D4CCBA;
-  --surface: #E0DAC8;
-  --panel: #FFFFFF;
-  --panel-dark: #141414;
-  --line: rgba(18, 18, 18, 0.12);
-  --line-bright: rgba(18, 18, 18, 0.25);
-  --muted: #666560;
-  --text: #121212;
-  --coffee: #C87A4B;
-  --terracotta: #D46A43;
-  --sage: #4A6B5D;
-  --shadow: 0 20px 60px rgba(18, 18, 18, 0.08);
-  --radius: 22px;
+  --bg: #0A0A0C;
+  --surface: #111114;
+  --panel: #16161A;
+  --panel-dark: #050505;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-bright: rgba(255, 255, 255, 0.15);
+  --muted: #8A8D93;
+  --text: #F0F2F5;
+  --primary: #00F0FF;
+  --secondary: #0044FF;
+  --silver: #A9B1BD;
+  --gold: #D4AF37;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  --radius: 16px;
 }
 
 body {
@@ -30,7 +31,7 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.02;
   z-index: 99;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
@@ -48,63 +49,75 @@ body::after {
 }
 
 .gradient-text {
-  background: linear-gradient(110deg, #121212 30%, #C87A4B 75%, #4A6B5D 95%);
+  background: linear-gradient(110deg, #FFFFFF 30%, #A9B1BD 75%, #8A8D93 95%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.gradient-text-coffee {
-  background: linear-gradient(110deg, #C87A4B 20%, #D46A43 80%);
+.gradient-text-primary {
+  background: linear-gradient(110deg, #00F0FF 20%, #0044FF 80%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Premium Warm Light Glassmorphism Panel */
+.gradient-text-gold {
+  background: linear-gradient(110deg, #D4AF37 20%, #F0E68C 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Premium Dark Glassmorphism Panel */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(18, 18, 18, 0.1);
+  background: rgba(22, 22, 26, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .glass-panel-dark {
-  background: #141414;
-  color: #f6f6f4;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(5, 5, 5, 0.8);
+  color: #F0F2F5;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.8);
 }
 
 .glass-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(18, 18, 18, 0.08);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(22, 22, 26, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(200, 122, 75, 0.4);
-  box-shadow: 0 12px 35px rgba(200, 122, 75, 0.12);
-  transform: translateY(-2px);
+  background: rgba(30, 30, 35, 0.6);
+  border-color: rgba(0, 240, 255, 0.3);
+  box-shadow: 0 12px 35px rgba(0, 240, 255, 0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+  transform: translateY(-4px);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #D4CCBA;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C5C2B8;
-  border-radius: 4px;
+  background: #2A2A35;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C87A4B;
+  background: #00F0FF;
 }
 
 @keyframes floatSlow {

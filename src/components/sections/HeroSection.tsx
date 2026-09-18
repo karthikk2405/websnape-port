@@ -1,110 +1,64 @@
 import React from 'react';
-import { ArrowRight, Sparkles, QrCode, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { HeroOrbCanvas } from '../3d/HeroOrbCanvas';
-import { useDemo } from '../../context/DemoContext';
+import { ArrowRight, Sparkles, Code2, Cpu, Globe } from 'lucide-react';
+import { DigitalCoreCanvas } from '../3d/DigitalCoreCanvas';
 
 export const HeroSection: React.FC = () => {
-  const { setActiveDemoView } = useDemo();
-
   return (
-    <section id="home" className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 px-6 md:px-12 overflow-hidden bg-[#ECEAE2]">
-      {/* 3D WebGL Globe Canvas */}
-      <HeroOrbCanvas />
-
-      {/* Floating Badge 1 - Left */}
-      <div className="hidden lg:block absolute left-8 top-1/3 z-10 animate-float" style={{ animationDelay: '0s' }}>
-        <div className="glass-panel p-4 max-w-[240px] shadow-xl border-black/10">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#C87A4B] animate-ping" />
-            <strong className="text-[#121212] text-xs font-bold uppercase tracking-wider">New order received</strong>
-          </div>
-          <p className="text-sm font-extrabold text-[#121212]">Table 07 · ₹784</p>
-          <div className="flex items-center gap-1.5 text-[11px] text-[#4A6B5D] font-bold mt-2">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Sent to Kitchen Screen</span>
-          </div>
-        </div>
+    <section id="home" className="relative min-h-screen flex items-center justify-center pt-32 pb-16 px-6 md:px-12 overflow-hidden bg-[#0A0A0C]">
+      {/* 3D Digital Core Environment */}
+      <div className="absolute inset-0 z-0">
+        <DigitalCoreCanvas />
       </div>
 
-      {/* Floating Badge 2 - Right Top */}
-      <div className="hidden lg:block absolute right-10 top-1/4 z-10 animate-float" style={{ animationDelay: '1.5s' }}>
-        <div className="glass-panel p-4 max-w-[220px] shadow-xl border-black/10">
-          <div className="flex items-center justify-between mb-2">
-            <strong className="text-[#121212] text-xs font-bold">websnape.menu</strong>
-            <span className="text-[10px] bg-[#C87A4B]/15 text-[#C87A4B] font-bold px-2 py-0.5 rounded-full">QR Ready</span>
-          </div>
-          <div className="w-12 h-12 bg-[#121212] rounded-lg border border-black/20 flex items-center justify-center mb-1">
-            <QrCode className="w-7 h-7 text-[#ECEAE2]" />
-          </div>
-          <span className="text-[11px] text-[#666560]">Scan table QR to view menu</span>
-        </div>
-      </div>
-
-      {/* Floating Badge 3 - Right Bottom */}
-      <div className="hidden lg:block absolute right-14 bottom-1/4 z-10 animate-float" style={{ animationDelay: '3s' }}>
-        <div className="glass-panel p-4 max-w-[210px] shadow-xl border-black/10">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-[#4A6B5D]" />
-            <span className="text-[#4A6B5D] font-bold text-xs">Barista Status</span>
-          </div>
-          <p className="text-sm font-extrabold text-[#121212]">Order #1042 · Ready</p>
-          <p className="text-[11px] text-[#666560] mt-0.5">Table 07 served in 6 mins</p>
-        </div>
-      </div>
+      {/* Subtle overlay to ensure text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0C]/80 via-transparent to-[#0A0A0C] z-10 pointer-events-none" />
 
       {/* Center Copy Container */}
-      <div className="relative z-20 max-w-4xl mx-auto text-center">
+      <div className="relative z-20 max-w-5xl mx-auto text-center mt-20">
         {/* Eyebrow badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-black/10 backdrop-blur-md mb-6 shadow-sm animate-fade-in-up">
-          <Sparkles className="w-3.5 h-3.5 text-[#C87A4B]" />
-          <span className="text-xs font-extrabold tracking-widest text-[#C87A4B] uppercase">
-            DIGITAL SYSTEMS FOR CAFÉS & RESTAURANTS
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-8 shadow-[0_0_20px_rgba(0,240,255,0.1)] animate-fade-in-up">
+          <Sparkles className="w-3.5 h-3.5 text-[#00F0FF]" />
+          <span className="text-xs font-extrabold tracking-widest text-[#00F0FF] uppercase">
+            PREMIUM DIGITAL SOLUTIONS
           </span>
         </div>
 
         {/* Main RYND Editorial Headline */}
-        <h1 className="rynd-title text-[#F7F5EF] text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight mb-6 drop-shadow-xl animate-fade-in-up delay-200">
-          Make your café<br />
-          <span className="gradient-text-coffee">feel alive.</span>
+        <h1 className="rynd-title text-white text-5xl sm:text-7xl md:text-8xl lg:text-[140px] tracking-tighter mb-8 drop-shadow-2xl animate-fade-in-up delay-200">
+          WE BUILD<br />
+          <span className="gradient-text">WHAT'S NEXT.</span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl text-[#ECEAE2] max-w-2xl mx-auto mb-10 leading-relaxed font-medium drop-shadow-md animate-fade-in-up delay-300">
-          WebSnape builds cinematic 3D websites and connected smart QR table ordering experiences designed specifically for ambitious cafés, restaurants, and food venues.
+        <p className="text-lg sm:text-2xl text-[#A9B1BD] max-w-3xl mx-auto mb-12 leading-relaxed font-medium animate-fade-in-up delay-300">
+          Websites. AI. Automation. Digital systems built for ambitious businesses.
         </p>
 
         {/* Hero CTA Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up delay-400">
           <a
-            href="#services"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#121212] text-[#F7F5EF] font-bold text-base px-8 py-4 rounded-full shadow-[0_10px_30px_rgba(18,18,18,0.2)] hover:bg-[#C87A4B] hover:shadow-[0_12px_40px_rgba(200,122,75,0.4)] hover:scale-105 active:scale-95 transition-all duration-200"
+            href="#work"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-[#0A0A0C] font-bold text-base px-10 py-5 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:bg-[#00F0FF] hover:text-[#0A0A0C] hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] hover:scale-105 active:scale-95 transition-all duration-300"
           >
-            Explore Café Systems
+            EXPLORE OUR WORK
             <ArrowRight className="w-5 h-5" />
           </a>
           <a
-            href="#lab"
-            onClick={() => setActiveDemoView('customer')}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/90 hover:bg-white border border-black/15 text-[#121212] font-bold text-base px-8 py-4 rounded-full shadow-sm transition-all duration-200"
+            href="#contact"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-base px-10 py-5 rounded-full shadow-sm hover:border-[#00F0FF]/50 transition-all duration-300 backdrop-blur-sm"
           >
-            Open demo laboratory →
+            START A PROJECT
           </a>
         </div>
 
-        {/* Trust Badges */}
-        <div className="mt-16 pt-8 border-t border-black/10 flex flex-wrap items-center justify-center gap-8 text-xs text-[#55544E] font-semibold animate-fade-in-up delay-500">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#4A6B5D]" />
-            <span>Zero App Download for Guests</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#C87A4B] animate-pulse-dot" />
-            <span>Instant Kitchen & Barista Sync</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#4A6B5D]" />
-            <span>Table QR Code Generator</span>
-          </div>
+        {/* Floating Icons */}
+        <div className="absolute top-1/2 -left-20 transform -translate-y-1/2 hidden xl:flex flex-col gap-8 opacity-40 animate-fade-in-up delay-500">
+          <Globe className="w-8 h-8 text-[#00F0FF]" />
+          <Code2 className="w-8 h-8 text-[#00F0FF]" />
+        </div>
+        <div className="absolute top-1/2 -right-20 transform -translate-y-1/2 hidden xl:flex flex-col gap-8 opacity-40 animate-fade-in-up delay-500">
+          <Cpu className="w-8 h-8 text-[#00F0FF]" />
+          <div className="w-8 h-8 rounded-full border-2 border-[#00F0FF]" />
         </div>
       </div>
     </section>

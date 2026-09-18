@@ -26,9 +26,9 @@ const CameraRig = () => {
   return null;
 };
 
-export const CafeCanvas: React.FC = () => {
+export const CafeCanvas: React.FC<{ className?: string }> = ({ className }) => {
   return (
-    <div className="w-full aspect-[4/3] max-w-[600px] rounded-[28px] overflow-hidden bg-gradient-to-br from-[#E0DAC8] to-[#D4CCBA] shadow-[0_12px_40px_rgba(74,107,93,0.22),_0_2px_12px_rgba(0,0,0,0.08)] relative cursor-grab active:cursor-grabbing">
+    <div className={className || "w-full aspect-[4/3] max-w-[600px] rounded-[28px] overflow-hidden bg-[#111114] shadow-[0_0_40px_rgba(0,240,255,0.1)] border border-white/5 relative cursor-grab active:cursor-grabbing"}>
       <Canvas shadows camera={{ position: [0, 2, 12], fov: 45 }}>
         <Suspense fallback={null}>
           <ambientLight intensity={0.7} />

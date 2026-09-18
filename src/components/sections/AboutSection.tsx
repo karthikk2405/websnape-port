@@ -1,79 +1,64 @@
 import React from 'react';
-import { Award, Zap, Shield, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Terminal } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   return (
-    <section id="about" className="py-24 px-6 md:px-12 max-w-7xl mx-auto border-t border-black/10">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        {/* Left Editorial Heading Column */}
-        <div className="lg:col-span-6 space-y-6">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#C87A4B]">
-            A STUDIO WITH A SHARP LENS
-          </span>
-          <h2 className="rynd-title text-4xl sm:text-6xl text-[#121212]">
-            Built for the places<br />
-            that make a <span className="gradient-text">city.</span>
-          </h2>
-          <p className="text-base text-[#55544E] leading-relaxed font-medium">
-            WebSnape partners with café owners, head chefs, artisan roasters, and local hospitality teams who care about every detail. We engineer digital products that feel as thoughtful as the physical spaces they represent.
-          </p>
-          <div className="space-y-3 pt-2 text-sm text-[#121212] font-semibold">
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-4 h-4 text-[#C87A4B]" />
-              <span>No slow generic templates — 100% custom engineered</span>
+    <section id="about" className="py-32 px-6 md:px-12 max-w-7xl mx-auto relative border-t border-white/5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        
+        {/* Abstract 3D Representation Placeholder (Node Mesh) */}
+        <div className="relative w-full aspect-square md:aspect-video lg:aspect-square bg-[#0A0A0C] border border-white/5 rounded-3xl overflow-hidden flex items-center justify-center group shadow-[0_0_50px_rgba(0,240,255,0.05)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.1)_0%,transparent_70%)]" />
+          
+          <div className="relative z-10 flex gap-8 items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity duration-700">
+            {/* Node 1 */}
+            <div className="w-16 h-16 rounded-full bg-black border-2 border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center animate-pulse-dot" style={{ animationDelay: '0s' }}>
+               <div className="w-2 h-2 rounded-full bg-white" />
             </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-4 h-4 text-[#4A6B5D]" />
-              <span>Direct table-to-kitchen & barista QR synchronization</span>
+            {/* Node 2 */}
+            <div className="w-24 h-24 rounded-full bg-black border-2 border-[#00F0FF]/40 shadow-[0_0_50px_rgba(0,240,255,0.4)] flex items-center justify-center animate-pulse-dot" style={{ animationDelay: '0.5s' }}>
+               <div className="w-3 h-3 rounded-full bg-[#00F0FF]" />
             </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-4 h-4 text-[#D46A43]" />
-              <span>Continuous long-term support & performance monitoring</span>
+            {/* Node 3 */}
+            <div className="w-16 h-16 rounded-full bg-black border-2 border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center animate-pulse-dot" style={{ animationDelay: '1s' }}>
+               <div className="w-2 h-2 rounded-full bg-white" />
             </div>
           </div>
+          
+          {/* Luminous data paths */}
+          <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00F0FF]/30 to-transparent" />
+          <div className="absolute left-1/2 top-0 h-full w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
         </div>
 
-        {/* Right Values Cards */}
-        <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="glass-panel p-6 bg-white border-black/10">
-            <div className="w-10 h-10 rounded-xl bg-[#C87A4B]/15 text-[#C87A4B] flex items-center justify-center mb-4">
-              <Zap className="w-5 h-5" />
+        {/* Copy */}
+        <div>
+          <span className="text-xs font-bold uppercase tracking-widest text-[#00F0FF] mb-4 block font-mono">
+            THE ENGINE
+          </span>
+          <h2 className="rynd-title text-4xl sm:text-6xl text-white mb-8 tracking-tight">
+            THREE MINDS.<br />
+            <span className="text-[#8A8D93]">ONE DIGITAL ENGINE.</span>
+          </h2>
+          <p className="text-[#A9B1BD] text-lg leading-relaxed font-medium mb-10">
+            Design, technology, and execution working together to turn ambitious ideas into real digital products. We are a specialized collective of engineers and designers building the next generation of the internet.
+          </p>
+          
+          <div className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="mt-1 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                <Terminal className="w-4 h-4 text-[#00F0FF]" />
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-sm tracking-widest mb-1">UNCOMPROMISING QUALITY</h4>
+                <p className="text-xs text-[#8A8D93] leading-relaxed">No templates. No bloated code. Every line of code and pixel is meticulously crafted for maximum performance and visual impact.</p>
+              </div>
             </div>
-            <h3 className="font-bold text-[#121212] text-lg mb-2">High Speed</h3>
-            <p className="text-xs text-[#666560] leading-relaxed">
-              Fast page loads under 0.6s and instant QR menu rendering with zero customer delay.
-            </p>
           </div>
 
-          <div className="glass-panel p-6 bg-white border-black/10">
-            <div className="w-10 h-10 rounded-xl bg-[#4A6B5D]/15 text-[#4A6B5D] flex items-center justify-center mb-4">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-[#121212] text-lg mb-2">3D Aesthetics</h3>
-            <p className="text-xs text-[#666560] leading-relaxed">
-              Cinematic visual identity, warm glass materials, smooth animations, and high-impact typography.
-            </p>
-          </div>
-
-          <div className="glass-panel p-6 bg-white border-black/10">
-            <div className="w-10 h-10 rounded-xl bg-[#D46A43]/15 text-[#D46A43] flex items-center justify-center mb-4">
-              <Award className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-[#121212] text-lg mb-2">Precision</h3>
-            <p className="text-xs text-[#666560] leading-relaxed">
-              Table-level QR tracking ensures kitchen staff always know which table placed which order.
-            </p>
-          </div>
-
-          <div className="glass-panel p-6 bg-white border-black/10">
-            <div className="w-10 h-10 rounded-xl bg-[#121212]/10 text-[#121212] flex items-center justify-center mb-4">
-              <Shield className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-[#121212] text-lg mb-2">Reliability</h3>
-            <p className="text-xs text-[#666560] leading-relaxed">
-              Built on modern edge infrastructure designed to handle weekend brunch rush without failing.
-            </p>
-          </div>
+          <a href="#contact" className="mt-12 inline-flex items-center gap-2 text-sm font-bold text-white hover:text-[#00F0FF] transition-colors border-b border-[#00F0FF]/30 pb-1">
+            Work with us
+            <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>
