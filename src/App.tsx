@@ -6,6 +6,7 @@ import { WhatWeBuildSection } from './components/sections/WhatWeBuildSection';
 import { WebServicesSection } from './components/sections/WebServicesSection';
 import { SmartOrderingSection } from './components/sections/SmartOrderingSection';
 import { ProjectShowcaseSection } from './components/sections/ProjectShowcaseSection';
+import { SEOSection } from './components/sections/SEOSection';
 import { DemoLaboratorySection } from './components/sections/DemoLaboratorySection';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactSection } from './components/sections/ContactSection';
@@ -29,6 +30,7 @@ export const App: React.FC = () => {
           <WebServicesSection />
           <SmartOrderingSection />
           <ProjectShowcaseSection />
+          <SEOSection />
           <DemoLaboratorySection />
           <AboutSection />
           <ContactSection />
