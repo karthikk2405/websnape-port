@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, Center, Environment, PresentationControls } from '@react-three/drei';
+import { useGLTF, Center, Environment, PresentationControls, Html, Loader } from '@react-three/drei';
 import * as THREE from 'three';
 
 const Model = () => {
-  // Load the downloaded GLB model
-  const { scene } = useGLTF('/cafe-misti.glb');
+  // Load the compressed GLB model
+  const { scene } = useGLTF('/cafe-misti-draco.glb');
   return <primitive object={scene} />;
 };
 
@@ -29,6 +29,7 @@ const CameraRig = () => {
 export const CafeCanvas: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={className || "w-full aspect-[4/3] max-w-[600px] rounded-[28px] overflow-hidden bg-[#111114] shadow-[0_0_40px_rgba(0,240,255,0.1)] border border-white/5 relative cursor-grab active:cursor-grabbing"}>
+      <Loader containerStyles={{ background: '#0A0A0C' }} innerStyles={{ backgroundColor: '#111114' }} barStyles={{ backgroundColor: '#00F0FF' }} dataStyles={{ color: '#00F0FF', fontFamily: 'monospace' }} />
       <Canvas shadows camera={{ position: [0, 2, 12], fov: 45 }}>
         <Suspense fallback={null}>
           <ambientLight intensity={0.7} />
